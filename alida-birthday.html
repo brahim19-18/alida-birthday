@@ -404,6 +404,21 @@
             font-style: italic;
             color: #d23369;
         }
+
+        .waiting-for-player {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #d23369;
+        }
+
+        .game-over {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.5em;
+            color: #d23369;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -452,30 +467,41 @@
                 </div>
                 
                 <div class="game-container" id="gamePlay" style="display: none;">
-                    <div class="game-scores">
-                        <div class="score-display" id="scoreDisplay">Score: 0</div>
-                        <div class="progress-display" id="progressDisplay">Question 1 of 31</div>
+                    <div id="waitingForPlayer" class="waiting-for-player" style="display: none;">
+                        Waiting for another player to join...
                     </div>
                     
-                    <div class="game-question" id="currentQuestion"></div>
-                    
-                    <div class="game-answer-input">
-                        <input type="text" id="playerAnswer" placeholder="Your answer...">
-                        <button id="submitAnswerBtn">Done</button>
-                    </div>
-                    
-                    <div class="answers-container">
-                        <div class="player-answer">
-                            <div class="player-label">Your Answer:</div>
-                            <div id="player1Answer" class="waiting-message">Waiting for your answer...</div>
+                    <div id="gameContent" style="display: none;">
+                        <div class="game-scores">
+                            <div class="score-display" id="scoreDisplay">Score: 0</div>
+                            <div class="progress-display" id="progressDisplay">Question 1 of 31</div>
                         </div>
-                        <div class="player-answer">
-                            <div class="player-label">Friend's Answer:</div>
-                            <div id="player2Answer" class="waiting-message">Waiting for friend to answer...</div>
+                        
+                        <div class="game-question" id="currentQuestion"></div>
+                        
+                        <div class="game-answer-input">
+                            <input type="text" id="playerAnswer" placeholder="Your answer...">
+                            <button id="submitAnswerBtn">Done</button>
                         </div>
+                        
+                        <div class="answers-container">
+                            <div class="player-answer">
+                                <div class="player-label">Your Answer:</div>
+                                <div id="player1Answer" class="waiting-message">Waiting for your answer...</div>
+                            </div>
+                            <div class="player-answer">
+                                <div class="player-label">Friend's Answer:</div>
+                                <div id="player2Answer" class="waiting-message">Waiting for friend to answer...</div>
+                            </div>
+                        </div>
+                        
+                        <button id="nextQuestionBtn" class="interactive-button" style="display: none;">Next Question</button>
                     </div>
                     
-                    <button id="nextQuestionBtn" class="interactive-button" style="display: none;">Next Question</button>
+                    <div id="gameOver" class="game-over" style="display: none;">
+                        Game Over! Thanks for playing!
+                        <div id="finalScore"></div>
+                    </div>
                 </div>
             </div>
             
@@ -625,6 +651,7 @@ Friendo 👽</p>
         let player1Score = 0;
         let player2Score = 0;
         let questionsAnswered = 0;
+        let gameRef = null;
         let questions = [
             "Who is the person Alida loves the most?",
             "What is the most common phrase used by Alida?",
@@ -664,6 +691,9 @@ Friendo 👽</p>
         const multiplayerGameSection = document.getElementById('multiplayerGame');
         const gameSetupDiv = document.getElementById('gameSetup');
         const gamePlayDiv = document.getElementById('gamePlay');
+        const waitingForPlayerDiv = document.getElementById('waitingForPlayer');
+        const gameContentDiv = document.getElementById('gameContent');
+        const gameOverDiv = document.getElementById('gameOver');
         const gameIdInput = document.getElementById('gameIdInput');
         const joinGameBtn = document.getElementById('joinGameBtn');
         const createGameBtn = document.getElementById('createGameBtn');
@@ -676,6 +706,7 @@ Friendo 👽</p>
         const scoreDisplay = document.getElementById('scoreDisplay');
         const progressDisplay = document.getElementById('progressDisplay');
         const joinStatus = document.getElementById('joinStatus');
+        const finalScoreDiv = document.getElementById('finalScore');
 
         // Function for the initial 1-17 countup
         function startCountup() {
@@ -812,20 +843,33 @@ Friendo 👽</p>
             player1Score = 0;
             player2Score = 0;
             questionsAnswered = 0;
+            currentQuestionIndex = 0;
             
-            const gameRef = database.ref('games/' + gameId);
+            gameRef = database.ref('games/' + gameId);
             gameRef.set({
-                player1: { answer: '', answered: false },
-                player2: { answer: '', answered: false },
+                player1: { 
+                    answer: '', 
+                    answered: false,
+                    score: 0
+                },
+                player2: { 
+                    answer: '', 
+                    answered: false,
+                    score: 0
+                },
                 currentQuestion: 0,
-                gameStarted: true,
+                gameStarted: false,
+                gameActive: true,
                 scored: false
             });
             
-            setupGameListeners(gameRef);
+            setupGameListeners();
             gameSetupDiv.style.display = 'none';
             gamePlayDiv.style.display = 'block';
-            showQuestion(0);
+            waitingForPlayerDiv.style.display = 'block';
+            gameContentDiv.style.display = 'none';
+            gameOverDiv.style.display = 'none';
+            
             updateScoreDisplay();
             
             alert(`Game created! Share this ID with a friend: ${gameId}`);
@@ -842,13 +886,20 @@ Friendo 👽</p>
             joinGameBtn.textContent = 'Joining...';
             joinStatus.textContent = 'Connecting to game...';
             
-            const gameRef = database.ref('games/' + gameId);
+            gameRef = database.ref('games/' + gameId);
             
             gameRef.once('value').then((snapshot) => {
                 const gameData = snapshot.val();
                 
                 if (!gameData) {
                     joinStatus.textContent = 'Game not found. Please check the ID.';
+                    joinGameBtn.disabled = false;
+                    joinGameBtn.textContent = 'Join Game';
+                    return;
+                }
+                
+                if (!gameData.gameActive) {
+                    joinStatus.textContent = 'Game is not active.';
                     joinGameBtn.disabled = false;
                     joinGameBtn.textContent = 'Join Game';
                     return;
@@ -865,15 +916,24 @@ Friendo 👽</p>
                 player1Score = 0;
                 player2Score = 0;
                 questionsAnswered = 0;
+                currentQuestionIndex = gameData.currentQuestion || 0;
                 
                 gameRef.update({
-                    player2: { answer: '', answered: false },
-                    scored: false
+                    player2: { 
+                        answer: '', 
+                        answered: false,
+                        score: 0
+                    },
+                    gameStarted: true
                 }).then(() => {
-                    setupGameListeners(gameRef);
+                    setupGameListeners();
                     gameSetupDiv.style.display = 'none';
                     gamePlayDiv.style.display = 'block';
-                    showQuestion(gameData.currentQuestion || 0);
+                    waitingForPlayerDiv.style.display = 'none';
+                    gameContentDiv.style.display = 'block';
+                    gameOverDiv.style.display = 'none';
+                    
+                    showQuestion(currentQuestionIndex);
                     updateScoreDisplay();
                     
                     joinStatus.textContent = 'Successfully joined game!';
@@ -888,31 +948,111 @@ Friendo 👽</p>
                 joinGameBtn.textContent = 'Join Game';
             });
         }
-
-        function setupGameListeners(gameRef) {
+        
+        function setupGameListeners() {
             gameRef.on('value', (snapshot) => {
                 const gameData = snapshot.val();
                 if (!gameData) return;
                 
+                // Check if game is over
+                if (gameData.currentQuestion >= questions.length) {
+                    showGameOver();
+                    return;
+                }
+                
+                // Update current question if changed
                 if (gameData.currentQuestion !== currentQuestionIndex) {
                     currentQuestionIndex = gameData.currentQuestion;
                     showQuestion(currentQuestionIndex);
                 }
                 
+                // Update player joined status
+                if (playerNumber === 1 && gameData.player2 && gameData.player2.answered !== undefined) {
+                    waitingForPlayerDiv.style.display = 'none';
+                    gameContentDiv.style.display = 'block';
+                }
+                
+                // Update scores
+                if (playerNumber === 1) {
+                    player1Score = gameData.player1.score || 0;
+                    player2Score = gameData.player2.score || 0;
+                } else {
+                    player1Score = gameData.player2.score || 0;
+                    player2Score = gameData.player1.score || 0;
+                }
+                updateScoreDisplay();
+                
+                // Update answers display
                 updateAnswersDisplay(gameData);
             });
         }
 
+        function updateAnswersDisplay(gameData) {
+            if (!gameData) return;
+
+            const player1Data = gameData.player1 || {};
+            const player2Data = gameData.player2 || {};
+
+            if (playerNumber === 1) {
+                if (player1Data.answered) {
+                    player1AnswerDiv.textContent = player1Data.answer || "(No answer)";
+                    player1AnswerDiv.className = "";
+                }
+                if (player2Data.answered) {
+                    player2AnswerDiv.textContent = player2Data.answer || "(No answer)";
+                    player2AnswerDiv.className = "";
+                }
+            } else {
+                if (player2Data.answered) {
+                    player1AnswerDiv.textContent = player2Data.answer || "(No answer)";
+                    player1AnswerDiv.className = "";
+                }
+                if (player1Data.answered) {
+                    player2AnswerDiv.textContent = player1Data.answer || "(No answer)";
+                    player2AnswerDiv.className = "";
+                }
+            }
+
+            // Check if both players answered
+            if (player1Data.answered && player2Data.answered) {
+                nextQuestionBtn.style.display = 'block';
+                
+                // Score the answers if not already scored
+                if (!gameData.scored) {
+                    const answer1 = (player1Data.answer || "").toLowerCase().trim();
+                    const answer2 = (player2Data.answer || "").toLowerCase().trim();
+                    
+                    if (answer1 && answer2 && areAnswersSimilar(answer1, answer2)) {
+                        // Update scores in database
+                        const updates = {};
+                        updates['player1/score'] = (player1Data.score || 0) + 1;
+                        updates['player2/score'] = (player2Data.score || 0) + 1;
+                        updates['scored'] = true;
+                        
+                        gameRef.update(updates);
+                    }
+                }
+            }
+            
+            updateProgressDisplay();
+        }
+
+        function areAnswersSimilar(answer1, answer2) {
+            if (!answer1 || !answer2) return false;
+            
+            // Remove common words
+            const commonWords = ['the', 'a', 'an', 'and', 'or', 'but', 'is', 'are', 'was', 'were'];
+            const words1 = answer1.split(/\s+/).filter(word => !commonWords.includes(word));
+            const words2 = answer2.split(/\s+/).filter(word => !commonWords.includes(word));
+            
+            // Check if any significant words match
+            return words1.some(word => words2.includes(word)) || 
+                   words2.some(word => words1.includes(word));
+        }
+
         function showQuestion(index) {
             if (index >= questions.length) {
-                currentQuestionDiv.textContent = "Game Over! Thanks for playing!";
-                playerAnswerInput.style.display = 'none';
-                submitAnswerBtn.style.display = 'none';
-                nextQuestionBtn.style.display = 'none';
-                
-                const finalScore = playerNumber === 1 ? player1Score : player2Score;
-                scoreDisplay.textContent = `Final Score: ${finalScore}`;
-                progressDisplay.textContent = `Completed ${questionsAnswered} of ${totalQuestions}`;
+                showGameOver();
                 return;
             }
             
@@ -930,60 +1070,19 @@ Friendo 👽</p>
             updateProgressDisplay();
         }
 
-        function updateAnswersDisplay(gameData) {
-            if (playerNumber === 1) {
-                if (gameData.player1.answered) {
-                    player1AnswerDiv.textContent = gameData.player1.answer || "(No answer)";
-                    player1AnswerDiv.className = "";
-                }
-                if (gameData.player2.answered) {
-                    player2AnswerDiv.textContent = gameData.player2.answer || "(No answer)";
-                    player2AnswerDiv.className = "";
-                }
-            } else {
-                if (gameData.player2.answered) {
-                    player1AnswerDiv.textContent = gameData.player2.answer || "(No answer)";
-                    player1AnswerDiv.className = "";
-                }
-                if (gameData.player1.answered) {
-                    player2AnswerDiv.textContent = gameData.player1.answer || "(No answer)";
-                    player2AnswerDiv.className = "";
-                }
+        function showGameOver() {
+            gameContentDiv.style.display = 'none';
+            gameOverDiv.style.display = 'block';
+            
+            const finalScore = playerNumber === 1 ? player1Score : player2Score;
+            finalScoreDiv.textContent = `Your final score: ${finalScore} out of ${totalQuestions}`;
+            
+            // Update database to mark game as inactive
+            if (gameRef) {
+                gameRef.update({
+                    gameActive: false
+                });
             }
-            
-            if (gameData.player1.answered && gameData.player2.answered) {
-                nextQuestionBtn.style.display = 'block';
-                
-                if (!gameData.scored) {
-                    questionsAnswered++;
-                    
-                    const answer1 = (gameData.player1.answer || "").toLowerCase().trim();
-                    const answer2 = (gameData.player2.answer || "").toLowerCase().trim();
-                    
-                    if (answer1 && answer2 && areAnswersSimilar(answer1, answer2)) {
-                        if (playerNumber === 1) {
-                            player1Score++;
-                        } else {
-                            player2Score++;
-                        }
-                        updateScoreDisplay();
-                        
-                        database.ref('games/' + gameId).update({
-                            scored: true
-                        });
-                    }
-                }
-            }
-            
-            updateProgressDisplay();
-        }
-
-        function areAnswersSimilar(answer1, answer2) {
-            const words1 = answer1.split(/\s+/);
-            const words2 = answer2.split(/\s+/);
-            
-            return words1.some(word => words2.includes(word)) || 
-                   words2.some(word => words1.includes(word));
         }
 
         function updateScoreDisplay() {
@@ -1001,7 +1100,7 @@ Friendo 👽</p>
                 alert('Please enter an answer');
                 return;
             }
-            const gameRef = database.ref('games/' + gameId);
+            
             const playerKey = playerNumber === 1 ? 'player1' : 'player2';
             
             gameRef.update({
@@ -1017,11 +1116,18 @@ Friendo 👽</p>
         }
 
         function goToNextQuestion() {
-            const gameRef = database.ref('games/' + gameId);
             gameRef.update({
                 currentQuestion: currentQuestionIndex + 1,
-                player1: { answer: '', answered: false },
-                player2: { answer: '', answered: false },
+                player1: { 
+                    answer: '', 
+                    answered: false,
+                    score: playerNumber === 1 ? player1Score : player2Score
+                },
+                player2: { 
+                    answer: '', 
+                    answered: false,
+                    score: playerNumber === 2 ? player1Score : player2Score
+                },
                 scored: false
             });
         }
