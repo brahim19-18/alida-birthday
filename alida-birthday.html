@@ -210,7 +210,6 @@
             100% { transform: translateY(110vh); opacity: 0; }
         }
 
-        /* Confetti effect */
         .confetti {
             position: fixed;
             width: 10px;
@@ -230,7 +229,6 @@
             }
         }
         
-        /* Music player */
         .music-player {
             margin: 20px 0;
         }
@@ -250,7 +248,6 @@
             margin-top: 20px;
         }
 
-        /* Countup overlay styles */
         .countup-overlay {
             position: fixed;
             top: 0;
@@ -288,9 +285,8 @@
             display: none;
         }
 
-        /* Multiplayer Game Styles */
         .multiplayer-game {
-            display: none; /* Hidden by default */
+            display: none;
             background-color: white;
             border-radius: 15px;
             padding: 20px;
@@ -402,16 +398,20 @@
             font-style: italic;
             color: #999;
         }
+
+        .join-status {
+            margin-top: 10px;
+            font-style: italic;
+            color: #d23369;
+        }
     </style>
 </head>
 <body>
-    <!-- Countup overlay (shown first) -->
     <div id="countupOverlay" class="countup-overlay">
         <div class="countup-number">1</div>
         <div class="countup-message">Get ready for the celebration!</div>
     </div>
     
-    <!-- Main content (hidden until countup completes) -->
     <div id="mainContent" class="main-content">
         <div class="container">
             <div class="header">
@@ -421,9 +421,8 @@
                 <p>Welcome to the most official (and slightly chaotic) celebration of Alida's existence!</p>
             </div>
             
-            <!-- Audio element for Bubble Sound -->
             <div class="section">
-                <h2>🎶 버블 사운드 • Bubble Sound </h2>
+                <h2>🎶 Bubble Sound (feat. Fleekman)</h2>
                 <div class="music-player">
                     <audio id="bubbleSound" controls style="width: 100%">
                         <source src="bubble-sound.mp3" type="audio/mpeg">
@@ -438,9 +437,8 @@
                 <div class="countdown" id="countdown"></div>
             </div>
             
-            <!-- Multiplayer Game Section -->
             <div class="section multiplayer-game" id="multiplayerGame">
-                <h2>🎮  Birthday Quiz</h2>
+                <h2>🎮 Multiplayer Birthday Quiz</h2>
                 <p>Challenge a friend to answer fun questions about Alida!</p>
                 
                 <div class="game-container" id="gameSetup">
@@ -448,6 +446,7 @@
                         <input type="text" id="gameIdInput" placeholder="Enter game ID (e.g., ALIDA123)">
                         <button id="joinGameBtn">Join Game</button>
                     </div>
+                    <div id="joinStatus" class="join-status"></div>
                     <p>Or create a new game:</p>
                     <button id="createGameBtn" class="interactive-button">Create New Game</button>
                 </div>
@@ -455,7 +454,7 @@
                 <div class="game-container" id="gamePlay" style="display: none;">
                     <div class="game-scores">
                         <div class="score-display" id="scoreDisplay">Score: 0</div>
-                        <div class="progress-display" id="progressDisplay">Question 1 of 41</div>
+                        <div class="progress-display" id="progressDisplay">Question 1 of 31</div>
                     </div>
                     
                     <div class="game-question" id="currentQuestion"></div>
@@ -597,7 +596,6 @@ Friendo 👽</p>
         </div>
     </div>
 
-    <!-- Audio element for Countup Sound -->
     <audio id="countupSound" style="display:none">
         <source src="countup-sound.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
@@ -628,16 +626,6 @@ Friendo 👽</p>
         let player2Score = 0;
         let questionsAnswered = 0;
         let questions = [
-            "What would be Alida's superhero name?",
-            "If Alida was a kitchen appliance, what would she be and why?",
-            "What's the most Alida-like animal?",
-            "What fictional character is most like Alida?",
-            "What would Alida's signature dance move be called?",
-            "If Alida had a talk show, what would it be called?",
-            "What's Alida's spirit food?",
-            "What would Alida's autobiography be titled?",
-            "If Alida was a weather phenomenon, what would she be?",
-            "What emoji best represents Alida?",
             "Who is the person Alida loves the most?",
             "What is the most common phrase used by Alida?",
             "What is the best season for Alida?",
@@ -649,23 +637,23 @@ Friendo 👽</p>
             "What is Alida's favorite type of movies?",
             "Which country would you like to visit?",
             "What is the thing in the world that you are similar to Alida?",
-            "What is Alida’s all-time favorite movie?",
-            "What is Alida’s favorite music artist ?",
-            "What is Alida’s favorite childhood TV show or cartoon?",
-            "What is Alida’s biggest pet peeve?",
+            "What is Alida's all-time favorite movie?",
+            "What is Alida's favorite music artist?",
+            "What is Alida's favorite childhood TV show or cartoon?",
+            "What is Alida's biggest pet peeve?",
             "What emoji does Alida use way too much?",
             "Is Alida more of a morning person or night owl?",
-            "What is Alida’s weirdest habit?",
-            "What is Alida’s love language?",
-            "Who is Alida’s celebrity crush?",
-            "What is Alida’s idea of a perfect friend hangout?",
+            "What is Alida's weirdest habit?",
+            "What is Alida's love language?",
+            "Who is Alida's celebrity crush?",
+            "What is Alida's idea of a perfect friend hangout?",
             "If Alida could have dinner with anyone, who would it be?",
-            "What was Alida’s dream job as a kid?",
-            "What is Alida’s most embarrassing childhood story?",
-            "What is Alida’s proudest achievement?",
+            "What was Alida's dream job as a kid?",
+            "What is Alida's most embarrassing childhood story?",
+            "What is Alida's proudest achievement?",
             "What is something Alida is secretly really good at?",
-            "What is Alida’s biggest fear?",
-            "If  Alida were a superhero, What will be her name and what would her power be?",
+            "What is Alida's biggest fear?",
+            "If Alida were a superhero, what would her name and power be?",
             "If Alida were stuck on a deserted island, what 3 things would she bring?",
             "If Alida could live in any fictional world, where would she choose?",
             "Did you like the questions?"
@@ -687,6 +675,7 @@ Friendo 👽</p>
         const nextQuestionBtn = document.getElementById('nextQuestionBtn');
         const scoreDisplay = document.getElementById('scoreDisplay');
         const progressDisplay = document.getElementById('progressDisplay');
+        const joinStatus = document.getElementById('joinStatus');
 
         // Function for the initial 1-17 countup
         function startCountup() {
@@ -728,7 +717,7 @@ Friendo 👽</p>
                     playButton.textContent = 'Click to Play Music';
                     playButton.style.marginTop = '10px';
                     playButton.addEventListener('click', () => {
-                        audio.play();
+                            audio.play();
                         playButton.remove();
                     });
                     document.querySelector('.music-player').appendChild(playButton);
@@ -829,7 +818,8 @@ Friendo 👽</p>
                 player1: { answer: '', answered: false },
                 player2: { answer: '', answered: false },
                 currentQuestion: 0,
-                gameStarted: true
+                gameStarted: true,
+                scored: false
             });
             
             setupGameListeners(gameRef);
@@ -842,33 +832,60 @@ Friendo 👽</p>
         }
 
         function joinExistingGame() {
-            gameId = gameIdInput.value.trim();
+            gameId = gameIdInput.value.trim().toUpperCase();
             if (!gameId) {
-                alert('Please enter a game ID');
+                joinStatus.textContent = 'Please enter a game ID';
                 return;
             }
             
-            playerNumber = 2;
-            player1Score = 0;
-            player2Score = 0;
-            questionsAnswered = 0;
+            joinGameBtn.disabled = true;
+            joinGameBtn.textContent = 'Joining...';
+            joinStatus.textContent = 'Connecting to game...';
             
             const gameRef = database.ref('games/' + gameId);
+            
             gameRef.once('value').then((snapshot) => {
                 const gameData = snapshot.val();
                 
                 if (!gameData) {
-                    alert('Game not found. Please check the ID.');
+                    joinStatus.textContent = 'Game not found. Please check the ID.';
+                    joinGameBtn.disabled = false;
+                    joinGameBtn.textContent = 'Join Game';
                     return;
                 }
                 
-                setupGameListeners(gameRef);
-                gameSetupDiv.style.display = 'none';
-                gamePlayDiv.style.display = 'block';
-                showQuestion(gameData.currentQuestion || 0);
-                updateScoreDisplay();
+                if (gameData.player2 && gameData.player2.answered !== undefined) {
+                    joinStatus.textContent = 'Game already has 2 players. Create a new game instead.';
+                    joinGameBtn.disabled = false;
+                    joinGameBtn.textContent = 'Join Game';
+                    return;
+                }
                 
-                alert(`Joined game ${gameId}!`);
+                playerNumber = 2;
+                player1Score = 0;
+                player2Score = 0;
+                questionsAnswered = 0;
+                
+                gameRef.update({
+                    player2: { answer: '', answered: false },
+                    scored: false
+                }).then(() => {
+                    setupGameListeners(gameRef);
+                    gameSetupDiv.style.display = 'none';
+                    gamePlayDiv.style.display = 'block';
+                    showQuestion(gameData.currentQuestion || 0);
+                    updateScoreDisplay();
+                    
+                    joinStatus.textContent = 'Successfully joined game!';
+                }).catch((error) => {
+                    joinStatus.textContent = 'Error joining: ' + error.message;
+                    joinGameBtn.disabled = false;
+                    joinGameBtn.textContent = 'Join Game';
+                });
+            }).catch((error) => {
+                joinStatus.textContent = 'Error: ' + error.message;
+                joinGameBtn.disabled = false;
+                joinGameBtn.textContent = 'Join Game';
             });
         }
 
@@ -893,7 +910,6 @@ Friendo 👽</p>
                 submitAnswerBtn.style.display = 'none';
                 nextQuestionBtn.style.display = 'none';
                 
-                // Show final scores
                 const finalScore = playerNumber === 1 ? player1Score : player2Score;
                 scoreDisplay.textContent = `Final Score: ${finalScore}`;
                 progressDisplay.textContent = `Completed ${questionsAnswered} of ${totalQuestions}`;
@@ -935,17 +951,14 @@ Friendo 👽</p>
                 }
             }
             
-            // Check if both answered to update scores
             if (gameData.player1.answered && gameData.player2.answered) {
                 nextQuestionBtn.style.display = 'block';
                 
-                // Calculate similarity between answers
-                const answer1 = (gameData.player1.answer || "").toLowerCase().trim();
-                const answer2 = (gameData.player2.answer || "").toLowerCase().trim();
-                
-                // Only score if this is the first time both have answered this question
                 if (!gameData.scored) {
                     questionsAnswered++;
+                    
+                    const answer1 = (gameData.player1.answer || "").toLowerCase().trim();
+                    const answer2 = (gameData.player2.answer || "").toLowerCase().trim();
                     
                     if (answer1 && answer2 && areAnswersSimilar(answer1, answer2)) {
                         if (playerNumber === 1) {
@@ -955,7 +968,6 @@ Friendo 👽</p>
                         }
                         updateScoreDisplay();
                         
-                        // Mark that we've scored this question
                         database.ref('games/' + gameId).update({
                             scored: true
                         });
@@ -967,7 +979,6 @@ Friendo 👽</p>
         }
 
         function areAnswersSimilar(answer1, answer2) {
-            // Simple check - answers are similar if they share at least one word
             const words1 = answer1.split(/\s+/);
             const words2 = answer2.split(/\s+/);
             
@@ -990,7 +1001,6 @@ Friendo 👽</p>
                 alert('Please enter an answer');
                 return;
             }
-            
             const gameRef = database.ref('games/' + gameId);
             const playerKey = playerNumber === 1 ? 'player1' : 'player2';
             
@@ -999,7 +1009,7 @@ Friendo 👽</p>
                     answer: answer,
                     answered: true
                 },
-                scored: false // Reset scored flag when new answers are submitted
+                scored: false
             });
             
             playerAnswerInput.disabled = true;
@@ -1016,7 +1026,7 @@ Friendo 👽</p>
             });
         }
 
-        // Game event listeners
+        // Event listeners
         createGameBtn.addEventListener('click', createNewGame);
         joinGameBtn.addEventListener('click', joinExistingGame);
         submitAnswerBtn.addEventListener('click', submitAnswer);
@@ -1052,7 +1062,7 @@ Friendo 👽</p>
         }
 
         function updateFinalCountdown() {
-                        // Your existing countdown logic
+            // Your existing countdown logic
         }
 
         function createConfetti() {
