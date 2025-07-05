@@ -889,7 +889,7 @@ Friendo 👽</p>
             gameRef = database.ref('games/' + gameId);
             
             gameRef.once('value').then((snapshot) => {
-                const gameData = snapshot.val();
+                                const gameData = snapshot.val();
                 
                 if (!gameData) {
                     joinStatus.textContent = 'Game not found. Please check the ID.';
@@ -948,7 +948,7 @@ Friendo 👽</p>
                 joinGameBtn.textContent = 'Join Game';
             });
         }
-        
+
         function setupGameListeners() {
             gameRef.on('value', (snapshot) => {
                 const gameData = snapshot.val();
