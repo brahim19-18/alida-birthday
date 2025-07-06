@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alida's 17th Birthday!</title>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -284,141 +281,6 @@
         .main-content {
             display: none;
         }
-
-        .multiplayer-game {
-            display: none;
-            background-color: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .game-id-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .game-id-input input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 10px;
-            border: 2px solid #ff9ec6;
-        }
-
-        .game-id-input button {
-            background-color: #ff9ec6;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .game-scores {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-        
-        .score-display {
-            background-color: #ffd6e7;
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-        
-        .progress-display {
-            background-color: #a78bfa;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 10px;
-            font-weight: bold;
-        }
-
-        .game-question {
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            font-weight: bold;
-        }
-
-        .game-answer-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .game-answer-input input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 10px;
-            border: 2px solid #ff9ec6;
-        }
-
-        .game-answer-input button {
-            background-color: #a78bfa;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .answers-container {
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        .player-answer {
-            flex: 1;
-            background-color: #ffebf3;
-            padding: 15px;
-            border-radius: 10px;
-            min-height: 100px;
-        }
-
-        .player-label {
-            font-weight: bold;
-            color: #d23369;
-            margin-bottom: 10px;
-        }
-
-        .waiting-message {
-            text-align: center;
-            font-style: italic;
-            color: #999;
-        }
-
-        .join-status {
-            margin-top: 10px;
-            font-style: italic;
-            color: #d23369;
-        }
-
-        .waiting-for-player {
-            text-align: center;
-            padding: 20px;
-            font-size: 1.2em;
-            color: #d23369;
-        }
-
-        .game-over {
-            text-align: center;
-            padding: 20px;
-            font-size: 1.5em;
-            color: #d23369;
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -450,59 +312,6 @@
             <div class="section">
                 <h2>⏳ Birthday Countdup</h2>
                 <div class="countdown" id="countdown"></div>
-            </div>
-            
-            <div class="section multiplayer-game" id="multiplayerGame">
-                <h2>🎮 Multiplayer Birthday Quiz</h2>
-                <p>Challenge a friend to answer fun questions about Alida!</p>
-                
-                <div class="game-container" id="gameSetup">
-                    <div class="game-id-input">
-                        <input type="text" id="gameIdInput" placeholder="Enter game ID (e.g., ALIDA123)">
-                        <button id="joinGameBtn">Join Game</button>
-                    </div>
-                    <div id="joinStatus" class="join-status"></div>
-                    <p>Or create a new game:</p>
-                    <button id="createGameBtn" class="interactive-button">Create New Game</button>
-                </div>
-                
-                <div class="game-container" id="gamePlay" style="display: none;">
-                    <div id="waitingForPlayer" class="waiting-for-player" style="display: none;">
-                        Waiting for another player to join...
-                    </div>
-                    
-                    <div id="gameContent" style="display: none;">
-                        <div class="game-scores">
-                            <div class="score-display" id="scoreDisplay">Score: 0</div>
-                            <div class="progress-display" id="progressDisplay">Question 1 of 31</div>
-                        </div>
-                        
-                        <div class="game-question" id="currentQuestion"></div>
-                        
-                        <div class="game-answer-input">
-                            <input type="text" id="playerAnswer" placeholder="Your answer...">
-                            <button id="submitAnswerBtn">Done</button>
-                        </div>
-                        
-                        <div class="answers-container">
-                            <div class="player-answer">
-                                <div class="player-label">Your Answer:</div>
-                                <div id="player1Answer" class="waiting-message">Waiting for your answer...</div>
-                            </div>
-                            <div class="player-answer">
-                                <div class="player-label">Friend's Answer:</div>
-                                <div id="player2Answer" class="waiting-message">Waiting for friend to answer...</div>
-                            </div>
-                        </div>
-                        
-                        <button id="nextQuestionBtn" class="interactive-button" style="display: none;">Next Question</button>
-                    </div>
-                    
-                    <div id="gameOver" class="game-over" style="display: none;">
-                        Game Over! Thanks for playing!
-                        <div id="finalScore"></div>
-                    </div>
-                </div>
             </div>
             
             <div class="section">
@@ -622,101 +431,35 @@ Friendo 👽</p>
         </div>
     </div>
 
+    <!-- Count-up sound -->
     <audio id="countupSound" style="display:none">
         <source src="countup-sound.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
+    <!-- Birthday celebration music -->
+    <audio id="birthdayMusic" style="display:none">
+        <source src="birthday-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <script>
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBXKUJ7ffkHUWbpIuMWe5EUfDzUQEo2_Gg",
-            authDomain: "alida-burthday.firebaseapp.com",
-            databaseURL: "https://alida-burthday-default-rtdb.firebaseio.com",
-            projectId: "alida-burthday",
-            storageBucket: "alida-burthday.firebasestorage.app",
-            messagingSenderId: "219383145724",
-            appId: "1:219383145724:web:419d2a3b60beb33a32a379",
-            measurementId: "G-KJXMHSM72T"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        // Game variables
-        let gameId = null;
-        let playerNumber = null;
-        let currentQuestionIndex = 0;
-        let player1Score = 0;
-        let player2Score = 0;
-        let questionsAnswered = 0;
-        let gameRef = null;
-        let questions = [
-            "Who is the person Alida loves the most?",
-            "What is the most common phrase used by Alida?",
-            "What is the best season for Alida?",
-            "What is Alida's favorite song?",
-            "What is Alida's favorite animal?",
-            "What is Alida's favorite color?",
-            "What is the most famous person you like Alida?",
-            "What is Alida's hobby?",
-            "What is Alida's favorite type of movies?",
-            "Which country would you like to visit?",
-            "What is the thing in the world that you are similar to Alida?",
-            "What is Alida's all-time favorite movie?",
-            "What is Alida's favorite music artist?",
-            "What is Alida's favorite childhood TV show or cartoon?",
-            "What is Alida's biggest pet peeve?",
-            "What emoji does Alida use way too much?",
-            "Is Alida more of a morning person or night owl?",
-            "What is Alida's weirdest habit?",
-            "What is Alida's love language?",
-            "Who is Alida's celebrity crush?",
-            "What is Alida's idea of a perfect friend hangout?",
-            "If Alida could have dinner with anyone, who would it be?",
-            "What was Alida's dream job as a kid?",
-            "What is Alida's most embarrassing childhood story?",
-            "What is Alida's proudest achievement?",
-            "What is something Alida is secretly really good at?",
-            "What is Alida's biggest fear?",
-            "If Alida were a superhero, what would her name and power be?",
-            "If Alida were stuck on a deserted island, what 3 things would she bring?",
-            "If Alida could live in any fictional world, where would she choose?",
-            "Did you like the questions?"
-        ];
-        const totalQuestions = questions.length;
-
-        // DOM elements
-        const multiplayerGameSection = document.getElementById('multiplayerGame');
-        const gameSetupDiv = document.getElementById('gameSetup');
-        const gamePlayDiv = document.getElementById('gamePlay');
-        const waitingForPlayerDiv = document.getElementById('waitingForPlayer');
-        const gameContentDiv = document.getElementById('gameContent');
-        const gameOverDiv = document.getElementById('gameOver');
-        const gameIdInput = document.getElementById('gameIdInput');
-        const joinGameBtn = document.getElementById('joinGameBtn');
-        const createGameBtn = document.getElementById('createGameBtn');
-        const currentQuestionDiv = document.getElementById('currentQuestion');
-        const playerAnswerInput = document.getElementById('playerAnswer');
-        const submitAnswerBtn = document.getElementById('submitAnswerBtn');
-        const player1AnswerDiv = document.getElementById('player1Answer');
-        const player2AnswerDiv = document.getElementById('player2Answer');
-        const nextQuestionBtn = document.getElementById('nextQuestionBtn');
-        const scoreDisplay = document.getElementById('scoreDisplay');
-        const progressDisplay = document.getElementById('progressDisplay');
-        const joinStatus = document.getElementById('joinStatus');
-        const finalScoreDiv = document.getElementById('finalScore');
-
         // Function for the initial 1-17 countup
         function startCountup() {
             let count = 1;
             const countupElement = document.querySelector('.countup-number');
             const countupAudio = document.getElementById('countupSound');
+            const birthdayMusic = document.getElementById('birthdayMusic');
             
-            // Play the countup sound
+            // Play both audio tracks
             countupAudio.play().catch(e => {
                 console.log("Countup audio play failed:", e);
+            });
+            
+            // Start the birthday music (loop it)
+            birthdayMusic.loop = true;
+            birthdayMusic.play().catch(e => {
+                console.log("Birthday music play failed:", e);
             });
             
             const timer = setInterval(() => {
@@ -748,7 +491,7 @@ Friendo 👽</p>
                     playButton.textContent = 'Click to Play Music';
                     playButton.style.marginTop = '10px';
                     playButton.addEventListener('click', () => {
-                            audio.play();
+                        audio.play();
                         playButton.remove();
                     });
                     document.querySelector('.music-player').appendChild(playButton);
@@ -761,9 +504,6 @@ Friendo 👽</p>
             setInterval(updateCountdown, 1000);
             updateFinalCountdown();
             setInterval(updateFinalCountdown, 86400000);
-            
-            // Show the game section
-            multiplayerGameSection.style.display = 'block';
         }
 
         // Quiz functionality
@@ -830,315 +570,6 @@ Friendo 👽</p>
                 <h3>Compliment:</h3>
                 <p>${randomCompliment}</p>
             `;
-        });
-
-        // Multiplayer Game Functions
-        function generateGameId() {
-            return 'ALIDA' + Math.floor(1000 + Math.random() * 9000);
-        }
-
-        function createNewGame() {
-            gameId = generateGameId();
-            playerNumber = 1;
-            player1Score = 0;
-            player2Score = 0;
-            questionsAnswered = 0;
-            currentQuestionIndex = 0;
-            
-            gameRef = database.ref('games/' + gameId);
-            gameRef.set({
-                player1: { 
-                    answer: '', 
-                    answered: false,
-                    score: 0
-                },
-                player2: { 
-                    answer: '', 
-                    answered: false,
-                    score: 0
-                },
-                currentQuestion: 0,
-                gameStarted: false,
-                gameActive: true,
-                scored: false
-            });
-            
-            setupGameListeners();
-            gameSetupDiv.style.display = 'none';
-            gamePlayDiv.style.display = 'block';
-            waitingForPlayerDiv.style.display = 'block';
-            gameContentDiv.style.display = 'none';
-            gameOverDiv.style.display = 'none';
-            
-            updateScoreDisplay();
-            
-            alert(`Game created! Share this ID with a friend: ${gameId}`);
-        }
-
-        function joinExistingGame() {
-            gameId = gameIdInput.value.trim().toUpperCase();
-            if (!gameId) {
-                joinStatus.textContent = 'Please enter a game ID';
-                return;
-            }
-            
-            joinGameBtn.disabled = true;
-            joinGameBtn.textContent = 'Joining...';
-            joinStatus.textContent = 'Connecting to game...';
-            
-            gameRef = database.ref('games/' + gameId);
-            
-            gameRef.once('value').then((snapshot) => {
-                                const gameData = snapshot.val();
-                
-                if (!gameData) {
-                    joinStatus.textContent = 'Game not found. Please check the ID.';
-                    joinGameBtn.disabled = false;
-                    joinGameBtn.textContent = 'Join Game';
-                    return;
-                }
-                
-                if (!gameData.gameActive) {
-                    joinStatus.textContent = 'Game is not active.';
-                    joinGameBtn.disabled = false;
-                    joinGameBtn.textContent = 'Join Game';
-                    return;
-                }
-                
-                if (gameData.player2 && gameData.player2.answered !== undefined) {
-                    joinStatus.textContent = 'Game already has 2 players. Create a new game instead.';
-                    joinGameBtn.disabled = false;
-                    joinGameBtn.textContent = 'Join Game';
-                    return;
-                }
-                
-                playerNumber = 2;
-                player1Score = 0;
-                player2Score = 0;
-                questionsAnswered = 0;
-                currentQuestionIndex = gameData.currentQuestion || 0;
-                
-                gameRef.update({
-                    player2: { 
-                        answer: '', 
-                        answered: false,
-                        score: 0
-                    },
-                    gameStarted: true
-                }).then(() => {
-                    setupGameListeners();
-                    gameSetupDiv.style.display = 'none';
-                    gamePlayDiv.style.display = 'block';
-                    waitingForPlayerDiv.style.display = 'none';
-                    gameContentDiv.style.display = 'block';
-                    gameOverDiv.style.display = 'none';
-                    
-                    showQuestion(currentQuestionIndex);
-                    updateScoreDisplay();
-                    
-                    joinStatus.textContent = 'Successfully joined game!';
-                }).catch((error) => {
-                    joinStatus.textContent = 'Error joining: ' + error.message;
-                    joinGameBtn.disabled = false;
-                    joinGameBtn.textContent = 'Join Game';
-                });
-            }).catch((error) => {
-                joinStatus.textContent = 'Error: ' + error.message;
-                joinGameBtn.disabled = false;
-                joinGameBtn.textContent = 'Join Game';
-            });
-        }
-
-        function setupGameListeners() {
-            gameRef.on('value', (snapshot) => {
-                const gameData = snapshot.val();
-                if (!gameData) return;
-                
-                // Check if game is over
-                if (gameData.currentQuestion >= questions.length) {
-                    showGameOver();
-                    return;
-                }
-                
-                // Update current question if changed
-                if (gameData.currentQuestion !== currentQuestionIndex) {
-                    currentQuestionIndex = gameData.currentQuestion;
-                    showQuestion(currentQuestionIndex);
-                }
-                
-                // Update player joined status
-                if (playerNumber === 1 && gameData.player2 && gameData.player2.answered !== undefined) {
-                    waitingForPlayerDiv.style.display = 'none';
-                    gameContentDiv.style.display = 'block';
-                }
-                
-                // Update scores
-                if (playerNumber === 1) {
-                    player1Score = gameData.player1.score || 0;
-                    player2Score = gameData.player2.score || 0;
-                } else {
-                    player1Score = gameData.player2.score || 0;
-                    player2Score = gameData.player1.score || 0;
-                }
-                updateScoreDisplay();
-                
-                // Update answers display
-                updateAnswersDisplay(gameData);
-            });
-        }
-
-        function updateAnswersDisplay(gameData) {
-            if (!gameData) return;
-
-            const player1Data = gameData.player1 || {};
-            const player2Data = gameData.player2 || {};
-
-            if (playerNumber === 1) {
-                if (player1Data.answered) {
-                    player1AnswerDiv.textContent = player1Data.answer || "(No answer)";
-                    player1AnswerDiv.className = "";
-                }
-                if (player2Data.answered) {
-                    player2AnswerDiv.textContent = player2Data.answer || "(No answer)";
-                    player2AnswerDiv.className = "";
-                }
-            } else {
-                if (player2Data.answered) {
-                    player1AnswerDiv.textContent = player2Data.answer || "(No answer)";
-                    player1AnswerDiv.className = "";
-                }
-                if (player1Data.answered) {
-                    player2AnswerDiv.textContent = player1Data.answer || "(No answer)";
-                    player2AnswerDiv.className = "";
-                }
-            }
-
-            // Check if both players answered
-            if (player1Data.answered && player2Data.answered) {
-                nextQuestionBtn.style.display = 'block';
-                
-                // Score the answers if not already scored
-                if (!gameData.scored) {
-                    const answer1 = (player1Data.answer || "").toLowerCase().trim();
-                    const answer2 = (player2Data.answer || "").toLowerCase().trim();
-                    
-                    if (answer1 && answer2 && areAnswersSimilar(answer1, answer2)) {
-                        // Update scores in database
-                        const updates = {};
-                        updates['player1/score'] = (player1Data.score || 0) + 1;
-                        updates['player2/score'] = (player2Data.score || 0) + 1;
-                        updates['scored'] = true;
-                        
-                        gameRef.update(updates);
-                    }
-                }
-            }
-            
-            updateProgressDisplay();
-        }
-
-        function areAnswersSimilar(answer1, answer2) {
-            if (!answer1 || !answer2) return false;
-            
-            // Remove common words
-            const commonWords = ['the', 'a', 'an', 'and', 'or', 'but', 'is', 'are', 'was', 'were'];
-            const words1 = answer1.split(/\s+/).filter(word => !commonWords.includes(word));
-            const words2 = answer2.split(/\s+/).filter(word => !commonWords.includes(word));
-            
-            // Check if any significant words match
-            return words1.some(word => words2.includes(word)) || 
-                   words2.some(word => words1.includes(word));
-        }
-
-        function showQuestion(index) {
-            if (index >= questions.length) {
-                showGameOver();
-                return;
-            }
-            
-            currentQuestionIndex = index;
-            currentQuestionDiv.textContent = questions[index];
-            player1AnswerDiv.textContent = "Waiting for your answer...";
-            player2AnswerDiv.textContent = "Waiting for friend to answer...";
-            player1AnswerDiv.className = "waiting-message";
-            player2AnswerDiv.className = "waiting-message";
-            playerAnswerInput.value = '';
-            playerAnswerInput.disabled = false;
-            submitAnswerBtn.disabled = false;
-            nextQuestionBtn.style.display = 'none';
-            
-            updateProgressDisplay();
-        }
-
-        function showGameOver() {
-            gameContentDiv.style.display = 'none';
-            gameOverDiv.style.display = 'block';
-            
-            const finalScore = playerNumber === 1 ? player1Score : player2Score;
-            finalScoreDiv.textContent = `Your final score: ${finalScore} out of ${totalQuestions}`;
-            
-            // Update database to mark game as inactive
-            if (gameRef) {
-                gameRef.update({
-                    gameActive: false
-                });
-            }
-        }
-
-        function updateScoreDisplay() {
-            const score = playerNumber === 1 ? player1Score : player2Score;
-            scoreDisplay.textContent = `Score: ${score}`;
-        }
-
-        function updateProgressDisplay() {
-            progressDisplay.textContent = `Question ${currentQuestionIndex + 1} of ${totalQuestions}`;
-        }
-
-        function submitAnswer() {
-            const answer = playerAnswerInput.value.trim();
-            if (!answer) {
-                alert('Please enter an answer');
-                return;
-            }
-            
-            const playerKey = playerNumber === 1 ? 'player1' : 'player2';
-            
-            gameRef.update({
-                [playerKey]: {
-                    answer: answer,
-                    answered: true
-                },
-                scored: false
-            });
-            
-            playerAnswerInput.disabled = true;
-            submitAnswerBtn.disabled = true;
-        }
-
-        function goToNextQuestion() {
-            gameRef.update({
-                currentQuestion: currentQuestionIndex + 1,
-                player1: { 
-                    answer: '', 
-                    answered: false,
-                    score: playerNumber === 1 ? player1Score : player2Score
-                },
-                player2: { 
-                    answer: '', 
-                    answered: false,
-                    score: playerNumber === 2 ? player1Score : player2Score
-                },
-                scored: false
-            });
-        }
-
-        // Event listeners
-        createGameBtn.addEventListener('click', createNewGame);
-        joinGameBtn.addEventListener('click', joinExistingGame);
-        submitAnswerBtn.addEventListener('click', submitAnswer);
-        nextQuestionBtn.addEventListener('click', goToNextQuestion);
-        playerAnswerInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') submitAnswer();
         });
 
         function createLuminousCircles() {
