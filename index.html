@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alida's 17th Birthday!</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #ffebf3;
+            color: #d23369;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            font-size: 3em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            animation: rainbow 5s infinite;
+        }
+        
+        @keyframes rainbow {
+            0% { color: #ff0000; }
+            14% { color: #ff7f00; }
+            28% { color: #ffff00; }
+            42% { color: #00ff00; }
+            57% { color: #0000ff; }
+            71% { color: #4b0082; }
+            85% { color: #9400d3; }
+            100% { color: #ff0000; }
+        }
+        
+        .header {
+            background-color: #ff9ec6;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .age-counter {
+            font-size: 1.5em;
+            background-color: white;
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .section {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            text-align: left;
+        }
+        
+        .timeline {
+            display: flex;
+            overflow-x: auto;
+            padding: 20px 0;
+            gap: 15px;
+        }
+        
+        .timeline-item {
+            min-width: 200px;
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .bingo-cell {
+            background-color: #ffd6e7;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .bingo-cell:hover {
+            background-color: #ff9ec6;
+            transform: scale(1.05);
+        }
+        
+        .bingo-cell.selected {
+            background-color: #d23369;
+            color: white;
+            text-decoration: line-through;
+        }
+        
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .quiz-option {
+            background-color: #ffd6e7;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .quiz-option:hover {
+            background-color: #ff9ec6;
+        }
+        
+        .quiz-option.selected {
+            background-color: #d23369;
+            color: white;
+            text-decoration: line-through;
+        }
+        
+        .roast {
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .interactive-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .interactive-button {
+            background-color: #ff9ec6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .interactive-button:hover {
+            background-color: #d23369;
+            transform: scale(1.1);
+        }
+        
+        .music-button {
+            background-color: #a78bfa;
+            margin: 5px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            font-size: 0.8em;
+            color: #999;
+        }
+        
+        .alida-photo {
+            width: 200px;
+            border-radius: 15px;
+            border: 5px solid #ff9ec6;
+            margin: 20px auto;
+            display: block;
+        }
+        
+        .countdown {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #d23369;
+        }
+
+        .luminous-circle {
+            position: fixed;
+            top: -10px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff 0%, #ffd6e7 70%, transparent 100%);
+            opacity: 0.8;
+            animation: fall 5s linear infinite;
+            z-index: 1000;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10px); opacity: 0.8; }
+            100% { transform: translateY(110vh); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            opacity: 0.7;
+            animation: confetti-fall 5s linear infinite;
+            z-index: 1000;
+        }
+        
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+        
+        .music-player {
+            margin: 20px 0;
+        }
+        
+        .now-playing {
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        #currentSong {
+            font-weight: bold;
+            color: #d23369;
+        }
+        
+        #interactiveResult {
+            min-height: 100px;
+            margin-top: 20px;
+        }
+
+        .countup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 235, 243, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .countup-number {
+            font-size: 10em;
+            font-weight: bold;
+            color: #d23369;
+            text-shadow: 0 0 20px #ff9ec6;
+            animation: pulse 0.5s alternate infinite;
+        }
+        
+        .countup-message {
+            font-size: 2em;
+            margin-top: 20px;
+            color: #d23369;
+        }
+        
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+
+        .main-content {
+            display: none;
+        }
+
+        /* Dance option styles */
+        .dance-option {
+            background-color: #ffd6e7;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .dance-option:hover {
+            background-color: #ff9ec6;
+            transform: scale(1.05);
+        }
+        
+        .dance-option.selected {
+            background-color: #d23369;
+            color: white;
+        }
+        
+        #danceStatus {
+            margin-top: 10px;
+            font-style: italic;
+        }
+        
+        /* New Gift Button Styles */
+        .gift-button-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 235, 243, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        
+        .gift-button {
+            position: relative;
+            background-color: #d23369;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            box-shadow: none;
+            border: 3px solid transparent;
+            animation: border-glow 2s infinite alternate;
+        }
+
+        @keyframes border-glow {
+            0% {
+                border-color: rgba(255, 158, 198, 0.7);
+                box-shadow: 0 0 10px rgba(255, 158, 198, 0.7), 
+                           inset 0 0 10px rgba(255, 158, 198, 0.7);
+            }
+            100% {
+                border-color: rgba(210, 51, 105, 0.9);
+                box-shadow: 0 0 25px rgba(210, 51, 105, 0.9), 
+                          inset 0 0 15px rgba(210, 51, 105, 0.9);
+            }
+        }
+
+        .gift-button:hover {
+            transform: scale(1.05);
+            background-color: #ff9ec6;
+        }
+
+        .gift-message {
+            font-size: 1.5em;
+            margin-top: 20px;
+            color: #d23369;
+        }
+
+        /* Video styles */
+        .video-container {
+            width: 200px; /* Same width as original image */
+            height: 355px; /* 9:16 aspect ratio */
+            margin: 20px auto;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 5px solid #ff9ec6;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div id="giftButtonContainer" class="gift-button-container">
+        <button class="gift-button" id="giftButton">🎁 Take Your Gift!</button>
+        <div class="gift-message">Click to reveal your special birthday surprise!</div>
+    </div>
+    
+    <div id="countupOverlay" class="countup-overlay" style="display: none;">
+        <div class="countup-number">1</div>
+        <div class="countup-message">Get ready for the celebration!</div>
+    </div>
+    
+    <div id="mainContent" class="main-content">
+        <div class="container">
+            <div class="header">
+                <h1>🎉 Alida's 17th Birthday! 🎉</h1>
+                <img src="images/alida1.jpg" alt="Alida" class="alida-photo">
+                <div class="age-counter">17 years of learning and progress!</div>
+                <p>Welcome to the most official (and slightly chaotic) celebration of Alida's existence!</p>
+            </div>
+            
+            <div class="section">
+                <h2>🎶 Bubble Sound (feat. Fleekman)</h2>
+                <div class="music-player">
+                    <audio id="bubbleSound" controls style="width: 100%">
+                        <source src="audio/bubble-sound.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <p class="now-playing">Alida's favorite song</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>⏳ Birthday Countdup</h2>
+                <div class="countdown" id="countdown"></div>
+            </div>
+            
+            <div class="section">
+                <h2>📜 The Alida Timeline</h2>
+                <p>From early childhood to becoming a dreamy girl!</p>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h3>Age 5</h3>
+                        <p>First The appearance of the most naughty Uzbek girl.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Age 10</h3>
+                        <p>I think this is the beginning of the emergence of the smartest Uzbek girl.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Age 13</h3>
+                        <p>The beginning of puberty and the brightness in the sky of Tashkent.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Age 16</h3>
+                        <p>I met the most beautiful Uzbek girl ever, who has the features of a Chinese girl.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h3>Age 17</h3>
+                        <p>The stage of stability and following the mind to a better and bright future.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🎲 Birthday Bingo!</h2>
+                <p>Will Alida do these things today? Mark them as they happen!</p>
+                
+                <div class="bingo-grid">
+                    <div class="bingo-cell">Say "I don't feel 17" 3+ times</div>
+                    <div class="bingo-cell">Check who wished you a happy birthday</div>
+                    <div class="bingo-cell">holding flowers in your hands</div>
+                    <div class="bingo-cell">Make a birthday wish</div>
+                    <div class="bingo-cell">FREE SPACE (she's Alida)</div>
+                    <div class="bingo-cell">Deny that you are not a Chinese girl</div>
+                    <div class="bingo-cell">Say "A famous quote by Alida!"</div>
+                    <div class="bingo-cell">going for a walk</div>
+                    <div class="bingo-cell">To wonder what your future holds for you</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🤔 How Well Do You Know Alida?</h2>
+                <p>A totally serious and not-at-all-made-up quiz</p>
+                
+                <div class="quiz-question">
+                    <h3>1. Alida's real age is:</h3>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="1">A) 17</div>
+                        <div class="quiz-option" data-question="1">B) 17 going on 7</div>
+                        <div class="quiz-option" data-question="1">C) Ageless queen</div>
+                        <div class="quiz-option" data-question="1">D) Old enough to know better, young enough to do it anyway</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question">
+                    <h3>2. Alida's spirit animal is:</h3>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="2">A) Miraculous Ladybug</div>
+                        <div class="quiz-option" data-question="2">B) Winnie the pooth</div>
+                        <div class="quiz-option" data-question="2">C) Pretty Kitty</div>
+                        <div class="quiz-option" data-question="2">D) All of the above</div>
+                    </div>
+                </div>
+                
+                <div class="quiz-question">
+                    <h3>3. Her ideal birthday gift?</h3>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="3">A) Money (duh)</div>
+                        <div class="quiz-option" data-question="3">B) Somethiong you asked your parents to buy for you</div>
+                        <div class="quiz-option" data-question="3">C) Meeting with BTS especilly V</div>
+                        <div class="quiz-option" data-question="3">D) Travel to a place you want</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>👽 Space Friendo</h2>
+                <p>My Uzbek friend</p>
+                
+                <div class="roast">
+                    <p>All the best on your special day, my friend.
+‎I hope this day brings you immense happiness, joy, and fun, and that nothing ruins your mood on this special occasion of yours.
+‎I wanted to tell you, on this occasion, that you have always been a dear friend to me and a meaningful presence in my life. You are a special person who entered my life, and I don't think it's just me who feels that way everyone lucky enough to share a day with you must feel the same. With your captivating, wise, and elegant personality, you truly found a place in my heart.
+‎I hope you always hold on to that unique personality of yours, and that you shine in your future, reach your dreams and ambitions, and always be proud of being Alida.
+‎I know we don't talk anymore, but I will still wish you the best.
+Friendo 👽</p>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🎮 Interactive Fun</h2>
+                
+                <div class="interactive-buttons">
+                    <button class="interactive-button" id="ageUpBtn">Age-Up Machine</button>
+                    <button class="interactive-button" id="danceBtn">Birthday Dance-Off</button>
+                    <button class="interactive-button" id="complimentBtn">Realistic compliments</button>
+                    <button class="interactive-button" id="videoBtn">The Art Of Messing You</button>
+                </div>
+                
+                <div id="interactiveResult"></div>
+            </div>
+            
+            <div class="section">
+                <h2>⏳ Your dreams will come true</h2>
+                <p id="finalCountdown">There is not much left for your journey to begin. I wish you great happiness and may God bless you in that, "Stay safe, happy, thrive, shine, and know you're always in my heart 💖"</p>
+            </div>
+            
+            <div class="footer">
+                <p>Made with 1% Mind, 99% Heart. Happy 17th, Alida! 🎂</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio elements -->
+    <audio id="countupSound" style="display:none">
+        <source src="audio/countup-sound.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <audio id="birthdayMusic" style="display:none">
+        <source src="audio/birthday-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Dance songs -->
+    <audio id="rockyourbodySound" style="display:none">
+        <source src="audio/rockyourbody-sound.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="wakawakaSound" style="display:none">
+        <source src="audio/wakawaka-sound.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="damaungurSound" style="display:none">
+        <source src="audio/damaungur-sound.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Gift button click handler
+        document.getElementById('giftButton').addEventListener('click', function() {
+            document.getElementById('giftButtonContainer').style.display = 'none';
+            startCountup();
+        });
+
+        // Function for the initial 1-17 countup
+        function startCountup() {
+            document.getElementById('countupOverlay').style.display = 'flex';
+            
+            let count = 1;
+            const countupElement = document.querySelector('.countup-number');
+            const countupAudio = document.getElementById('countupSound');
+            const birthdayMusic = document.getElementById('birthdayMusic');
+            
+            countupAudio.play().catch(e => console.log("Countup audio play failed:", e));
+            birthdayMusic.loop = true;
+            birthdayMusic.play().catch(e => console.log("Birthday music play failed:", e));
+            
+            const timer = setInterval(() => {
+                count++;
+                countupElement.textContent = count;
+                
+                if (count >= 17) {
+                    clearInterval(timer);
+                    setTimeout(() => {
+                        document.getElementById('countupOverlay').style.display = 'none';
+                        document.getElementById('mainContent').style.display = 'block';
+                        initializeMainPage();
+                    }, 1720);
+                }
+            }, 1720);
+        }
+        
+        // Initialize the main page after countup
+        function initializeMainPage() {
+            const audio = document.getElementById('bubbleSound');
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    const playButton = document.createElement('button');
+                    playButton.className = 'interactive-button';
+                    playButton.textContent = 'Click to Play Music';
+                    playButton.style.marginTop = '10px';
+                    playButton.addEventListener('click', () => {
+                        audio.play();
+                        playButton.remove();
+                    });
+                    document.querySelector('.music-player').appendChild(playButton);
+                });
+            }
+            
+            createConfetti();
+            createLuminousCircles();
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            updateFinalCountdown();
+            setInterval(updateFinalCountdown, 86400000);
+        }
+
+        // Quiz functionality
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const questionNum = this.getAttribute('data-question');
+                document.querySelectorAll(`.quiz-option[data-question="${questionNum}"]`).forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                this.classList.add('selected');
+            });
+        });
+
+        // Bingo functionality
+        document.querySelectorAll('.bingo-cell').forEach(cell => {
+            cell.addEventListener('click', () => cell.classList.toggle('selected'));
+        });
+        
+        // Interactive buttons
+        document.getElementById('ageUpBtn').addEventListener('click', () => {
+            document.getElementById('interactiveResult').innerHTML = `
+                <h3>Future Alida at 20:</h3>
+                <p>☕ Coffee addiction fully developed</p>
+                <p>✈️ Travel around the world</p>
+                <p>🎉 Be the first in your field</p>
+                <p>🤷‍♀️ Something else</p>`;
+            createConfetti();
+        });
+        
+        document.getElementById('danceBtn').addEventListener('click', () => {
+            document.getElementById('interactiveResult').innerHTML = `
+                <h3>Choose a Dance Move:</h3>
+                <div class="dance-option" data-song="rockyourbody">👯‍♀️ Rock Your Body → With you partner</div>
+                <div class="dance-option" data-song="wakawaka">💃🏻 Waka Waka → Move gracefully</div>
+                <div class="dance-option" data-song="damaungur">🌺 Pretty Little Baby → I'm so in love with you</div>
+                <div id="danceStatus" style="margin-top:10px;"></div>`;
+            
+            document.querySelectorAll('.dance-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.dance-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    const songType = this.getAttribute('data-song');
+                    const statusElement = document.getElementById('danceStatus');
+                    
+                    document.getElementById('rockyourbodySound').pause();
+                    document.getElementById('wakawakaSound').pause();
+                    document.getElementById('damaungurSound').pause();
+                    
+                    let song, danceName;
+                    switch(songType) {
+                        case 'rockyourbody':
+                            song = document.getElementById('rockyourbodySound');
+                            danceName = "Rock your body"; break;
+                        case 'wakawaka':
+                            song = document.getElementById('wakawakaSound');
+                            danceName = "Waka Waka"; break;
+                        case 'damaungur':
+                            song = document.getElementById('damaungurSound');
+                            danceName = "Pretty little baby"; break;
+                    }
+                    
+                    song.currentTime = 0;
+                    song.play()
+                        .then(() => {
+                            statusElement.innerHTML = `Now playing: <strong>${danceName}</strong>`;
+                            createConfetti();
+                        })
+                        .catch(e => {
+                            statusElement.innerHTML = `Couldn't play ${danceName} song: ${e.message}`;
+                        });
+                });
+            });
+        });
+        
+        document.getElementById('complimentBtn').addEventListener('click', () => {
+            const compliments = [
+                "You're... uh... not Chinese!",
+                "Your hair looks nice today!",
+                "You're pretty... I'm sure.",
+                "You're the moon... we know that!",
+                "You're aging like... a person!",
+                "The most beautiful Uzbek girl!",
+                "My friend... despite the distance!",
+                "I love... your smile!",
+                "Your eyes... are indescribable!",
+                "Your intelligence is sometimes deceiving!",
+                "Your voice... I heard it once... it suits you!",
+                "You're 17! That's a number!"
+            ];
+            document.getElementById('interactiveResult').innerHTML = `
+                <h3>Compliment:</h3>
+                <p>${compliments[Math.floor(Math.random() * compliments.length)]}</p>`;
+        });
+
+        // New video button functionality
+        document.getElementById('videoBtn').addEventListener('click', () => {
+            document.getElementById('interactiveResult').innerHTML = `
+                <h3>Every message feels like a risk... so</h3>
+                <div class="video-container">
+                    <video controls autoplay>
+                        <source src="videos/special-message.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>`;
+            createConfetti();
+        });
+
+        function createLuminousCircles() {
+           setInterval(() => {
+                const circle = document.createElement('div');
+                circle.className = 'luminous-circle';
+                circle.style.left = Math.random() * 100 + 'vw';
+                circle.style.width = circle.style.height = (Math.random() * 8 + 4) + 'px';
+                circle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                document.body.appendChild(circle);
+                setTimeout(() => circle.remove(), 5000);
+            }, 200);
+        }
+
+        function updateCountdown() {
+            const birthday = new Date(2008, 7, 6);
+            const now = new Date();
+            const diff = now - birthday;
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML =
+            `${days} days ${hours}h ${minutes}m ${seconds}s since Alida's birthday on August 6, 2008!`;
+        }
+
+        function updateFinalCountdown() {
+            // Your existing countdown logic
+        }
+
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                document.body.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 5000);
+            }
+        }
+
+        // Initially hide the countup overlay and main content
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('countupOverlay').style.display = 'none';
+            document.getElementById('mainContent').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
